@@ -98,7 +98,7 @@ body {
 }
 
 .login-container {
-  width: 55%;
+  width: 60%;
   padding: 50px 30px;
   border-radius: 13px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
@@ -395,9 +395,9 @@ body {
 
 .credentials-item {
   display: flex;
-  gap: 8px;
+  // gap: 8px;
   margin-bottom: 6px;
-  flex-wrap: wrap;
+  // flex-wrap: wrap;
 
   &:last-child {
     margin-bottom: 0;
