@@ -1,0 +1,16 @@
+:host {
+  display: block;
+  min-height: 100vh;
+  background-color: #f9fafb;
+}
+
+.main-content {
+  // padding-top: 20px;
+  margin-top: 70px; // Adjust based on your header height
+  min-height: calc(100vh - 70px);
+
+  @media (max-width: 768px) {
+    // padding: 16px;
+    margin-top: 60px;
+  }
+}

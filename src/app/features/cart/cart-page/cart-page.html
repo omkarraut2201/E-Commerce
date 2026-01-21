@@ -1,0 +1,40 @@
+<div class="cart-page-container">
+  <div class="cart-content">
+    <!-- Page Header -->
+    <div class="page-header">
+      <button class="back-btn" routerLink="/products">
+        <i class="pi pi-arrow-left"></i>
+        Continue Shopping
+      </button>
+      <h1 class="page-title">Shopping Cart</h1>
+      <p class="item-count">{{ cartItems.length }} {{ cartItems.length === 1 ? 'item' : 'items' }}</p>
+    </div>
+
+    @if (cartItems.length > 0) {
+    <div class="cart-main-container">
+      <!-- Cart Items Table -->
+      <div class="cart-table-section">
+        <app-generic-table [columns]="tableColumns" [data]="tableData" [showActions]="true"
+          (onQuantityChange)="handleQuantityChange($event)" (onDelete)="removeFromCart($event)" />
+      </div>
+
+      <!-- Cart Summary -->
+      <app-order-summary 
+        [data]="orderSummaryData"
+        (onCheckout)="proceedToCheckout()"
+      />
+    </div>
+    } @else {
+    <!-- Empty Cart State -->
+    <div class="empty-cart">
+      <i class="pi pi-shopping-cart"></i>
+      <h2>Your cart is empty</h2>
+      <p>Add some products to get started!</p>
+      <button class="continue-shopping-btn" routerLink="/products">
+        <i class="pi pi-arrow-left"></i>
+        Continue Shopping
+      </button>
+    </div>
+    }
+  </div>
+</div>

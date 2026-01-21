@@ -1,0 +1,154 @@
+<div class="product-details-container">
+  <!-- Loading State -->
+  @if (isLoading) {
+    <div class="loading-state">
+      <i class="pi pi-spinner pi-spin" style="font-size: 2rem;"></i>
+      <p>Loading product details...</p>
+    </div>
+  }
+
+  <!-- Error State -->
+  @if (error && !isLoading) {
+    <div class="error-state">
+      <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: #dc2626;"></i>
+      <p>{{ error }}</p>
+      <button (click)="goBack()" class="back-btn">Back to Products</button>
+    </div>
+  }
+
+  <!-- Product Details -->
+  @if (product && !isLoading && !error) {
+    <div class="product-details-content">
+      <!-- Back Button -->
+      <button class="back-link" (click)="goBack()">
+        <i class="pi pi-arrow-left"></i>
+        Back to Products
+      </button>
+
+      <div class="product-details-grid">
+        <!-- Product Image -->
+        <div class="product-image-section">
+          <div class="main-image-wrapper">
+            <img [src]="product.image" [alt]="product.name" class="main-image" />
+            @if (product.discount) {
+              <div class="discount-badge">-{{ product.discount }}%</div>
+            }
+          </div>
+        </div>
+
+        <!-- Product Info -->
+        <div class="product-info-section">
+          <!-- Category -->
+          <div class="category-badge">{{ product.category }}</div>
+
+          <!-- Product Name -->
+          <h1 class="product-title">{{ product.name }}</h1>
+
+          <!-- Price -->
+          <div class="price-section">
+            @if (product.discount && getDiscountedPrice()) {
+              <div class="discounted-price">{{ getDiscountedPrice() | currency:'INR':'symbol':'1.0-0' }}</div>
+              <div class="original-price">{{ product.price | currency:'INR':'symbol':'1.0-0' }}</div>
+            } @else {
+              <div class="discounted-price">{{ product.price | currency:'INR':'symbol':'1.0-0' }}</div>
+            }
+          </div>
+
+          <!-- Stock Status -->
+          <div class="stock-section">
+            @if (product.stock > 0) {
+              <div class="stock-available">
+                <i class="pi pi-check-circle"></i>
+                <span>In stock and ready to ship</span>
+              </div>
+            } @else {
+              <div class="stock-unavailable">
+                <i class="pi pi-exclamation-triangle"></i>
+                <span>This item is currently out of stock. Add it to your wishlist to be notified when it's available again.</span>
+              </div>
+            }
+          </div>
+
+          <!-- Description -->
+          <div class="description-section">
+            <h3>Description</h3>
+            <p>{{ product.description }}</p>
+          </div>
+
+          <!-- Quantity Selector -->
+          <div class="quantity-section">
+            <label>Quantity:</label>
+            <div class="quantity-controls">
+              <button 
+                class="quantity-btn" 
+                (click)="decreaseQuantity()" 
+                [disabled]="quantity <= 1">
+                <i class="pi pi-minus"></i>
+              </button>
+              <span class="quantity-display">{{ quantity }}</span>
+              <button 
+                class="quantity-btn" 
+                (click)="increaseQuantity()" 
+                [disabled]="product.stock === 0 || quantity >= product.stock">
+                <i class="pi pi-plus"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="action-buttons">
+            @if (product.stock > 0) {
+              <button 
+                class="add-to-cart-btn" 
+                (click)="addToCart()">
+                <i class="pi pi-shopping-cart"></i>
+                Add to Cart
+              </button>
+            } @else {
+              <button 
+                class="notify-me-btn" 
+                (click)="notifyMe()">
+                <i class="pi pi-bell"></i>
+                Notify Me
+              </button>
+            }
+            <!-- <button class="wishlist-btn" (click)="addToWishlist()">
+              <i class="pi pi-heart"></i>
+            </button>
+            <button class="share-btn" (click)="shareProduct()">
+              <i class="pi pi-share-alt"></i>
+            </button> -->
+          </div>
+
+          <!-- Additional Info -->
+          <div class="additional-info">
+            <div class="info-item">
+              <i class="pi pi-truck"></i>
+              <span>Free shipping on orders over ₹50</span>
+            </div>
+            <div class="info-item">
+              <i class="pi pi-sync"></i>
+              <span>30-day return policy</span>
+            </div>
+            <div class="info-item">
+              <i class="pi pi-shield"></i>
+              <span>2-year warranty included</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Related Products Section -->
+      @if (relatedProducts.length > 0) {
+        <div class="related-products-section">
+          <h2 class="related-products-title">Related Products</h2>
+          <div class="related-products-grid">
+            @for (relatedProduct of relatedProducts; track relatedProduct.id) {
+              <app-product-card [product]="relatedProduct" />
+            }
+          </div>
+        </div>
+      }
+    </div>
+  }
+</div>

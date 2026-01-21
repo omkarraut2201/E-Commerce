@@ -1,0 +1,291 @@
+<div class="profile-container">
+  <div class="profile-content">
+    <!-- Page Header -->
+    <div class="page-header">
+      <div class="header-content">
+        <!-- <div>
+          <h1>My Profile</h1>
+        </div> -->
+        <button class="btn-continue-shopping" routerLink="/products">
+          <i class="pi pi-shopping-cart"></i>
+          Continue Shopping
+        </button>
+      </div>
+    </div>
+
+    <!-- Two Column Layout -->
+    <div class="profile-layout">
+      <!-- Left Side: User Information Card -->
+      <div class="user-info-card">
+      <div class="card-header">
+        <!-- <div class="header-left">
+          <h2>Personal Information</h2>
+        </div> -->
+        @if (!isEditMode) {
+          <div class="profile-avatar" (click)="toggleEditMode()">
+            <div class="avatar-circle">
+              <span class="avatar-initials">{{ getInitials() }}</span>
+            </div>
+            <div class="edit-badge">
+              <i class="pi pi-pencil"></i>
+            </div>
+          </div>
+        }
+      </div>
+
+      @if (isLoadingProfile) {
+        <div class="loading-state">
+          <i class="pi pi-spin pi-spinner"></i>
+          <p>Loading profile...</p>
+        </div>
+      } @else {
+        @if (!isEditMode) {
+          <!-- Display Mode -->
+          <div class="info-display">
+            <div class="info-row">
+              <div class="info-item">
+                <span class="info-label">Name</span>
+                <span class="info-value">{{ user?.name || 'Not provided' }}</span>
+              </div>
+              <div class="info-item">
+                <span class="info-label">Email</span>
+                <span class="info-value">{{ user?.email }}</span>
+              </div>
+            </div>
+            
+            <div class="info-row">
+              <div class="info-item">
+                <span class="info-label">Phone</span>
+                <span class="info-value">{{ formattedPhone }}</span>
+              </div>
+            </div>
+            
+            <div class="info-row">
+              <div class="info-item full-width">
+                <span class="info-label">Address</span>
+                <span class="info-value">{{ user?.address || 'Not provided' }}</span>
+              </div>
+            </div>
+          </div>
+        } @else {
+          <!-- Edit Mode -->
+          <div class="edit-form">
+            <form [formGroup]="profileForm" (ngSubmit)="saveProfile()">
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="name">
+                    Full Name <span class="required">*</span>
+                  </label>
+                  <input
+                    id="name"
+                    type="text"
+                    formControlName="name"
+                    placeholder="Enter your full name"
+                    [class.error]="isFieldInvalid('name')"
+                  />
+                  @if (isFieldInvalid('name')) {
+                    <span class="error-message">{{ getFieldError('name') }}</span>
+                  }
+                </div>
+
+                <div class="form-group">
+                  <label for="email">
+                    Email
+                  </label>
+                  <input
+                    id="email"
+                    type="email"
+                    formControlName="email"
+                    placeholder="Enter your email"
+                    [class.error]="isFieldInvalid('email')"
+                  />
+                  @if (isFieldInvalid('email')) {
+                    <span class="error-message">{{ getFieldError('email') }}</span>
+                  }
+                </div>
+              </div>
+
+              <div class="form-row">
+                <div class="form-group">
+                  <label for="phone">
+                    Phone Number
+                  </label>
+                  <input
+                    id="phone"
+                    type="tel"
+                    formControlName="phone"
+                    placeholder="Enter 10-digit mobile number"
+                    maxlength="10"
+                    [class.error]="isFieldInvalid('phone')"
+                  />
+                  @if (isFieldInvalid('phone')) {
+                    <span class="error-message">{{ getFieldError('phone') }}</span>
+                  }
+                </div>
+              </div>
+
+              <div class="form-group full-width">
+                <label for="address">
+                  Address
+                </label>
+                <textarea
+                  id="address"
+                  formControlName="address"
+                  placeholder="Enter your complete address"
+                  rows="4"
+                  [class.error]="isFieldInvalid('address')"
+                ></textarea>
+                @if (isFieldInvalid('address')) {
+                  <span class="error-message">{{ getFieldError('address') }}</span>
+                }
+              </div>
+
+              <div class="form-actions">
+                <button type="button" class="cancel-btn" (click)="toggleEditMode()">
+                  Cancel
+                </button>
+                <button type="submit" class="save-btn" [disabled]="profileForm.invalid || profileForm.pristine || isSavingProfile">
+                  @if (isSavingProfile) {
+                    <i class="pi pi-spin pi-spinner"></i>
+                    Saving...
+                  } @else {
+                    <i class="pi pi-check"></i>
+                    Save Changes
+                  }
+                </button>
+              </div>
+            </form>
+          </div>
+        }
+      }
+    </div>
+
+    <!-- Right Side: Order History Card -->
+    <div class="order-history-card">
+      <div class="card-header">
+        <h2>Order History</h2>
+        <span class="order-count">{{ orders.length }} {{ orders.length === 1 ? 'order' : 'orders' }}</span>
+      </div>
+
+      <!-- Filters -->
+      <div class="filters-section">
+        <div class="filter-tabs">
+          @for (option of statusOptions; track option.value) {
+            <button 
+              class="filter-tab"
+              [class.active]="statusFilter === option.value"
+              (click)="filterOrders(option.value)">
+              {{ option.label }}
+            </button>
+          }
+        </div>
+      </div>
+
+      @if (isLoadingOrders) {
+        <div class="loading-state">
+          <i class="pi pi-spin pi-spinner"></i>
+          <p>Loading orders...</p>
+        </div>
+      } @else {
+        @if (orderTableData.length > 0) {
+          <!-- Orders Table -->
+          <div class="orders-table">
+            <app-generic-table
+              [columns]="orderTableColumns"
+              [data]="orderTableData"
+              [showActions]="false"
+              (onAction)="handleOrderAction($event)"
+            />
+          </div>
+        } @else {
+          <!-- Empty State -->
+          <div class="empty-orders">
+            <i class="pi pi-shopping-bag"></i>
+            <h3>No orders found</h3>
+            <p>{{ statusFilter === 'all' ? 'You haven\'t placed any orders yet' : 'No orders with this status' }}</p>
+          </div>
+        }
+      }
+    </div>
+    </div>
+  </div>
+</div>
+
+<!-- Order Details Modal -->
+@if (showOrderDetails && selectedOrder) {
+  <div class="modal-overlay" (click)="closeOrderDetails()">
+    <div class="modal-content" (click)="$event.stopPropagation()">
+      <div class="modal-header">
+        <h3>Order Details</h3>
+        <button class="close-btn" (click)="closeOrderDetails()">
+          <i class="pi pi-times"></i>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <!-- Order Info -->
+        <!-- <div class="order-info">
+          <div class="info-item">
+            <span class="label">Order ID:</span>
+            <span class="value">{{ selectedOrder.id }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Date:</span>
+            <span class="value">{{ selectedOrder.orderDate | date:'dd MMM yyyy, hh:mm a' }}</span>
+          </div>
+          <div class="info-item">
+            <span class="label">Status:</span>
+            <span class="status-badge" [ngClass]="selectedOrder.status">{{ selectedOrder.status }}</span>
+          </div>
+        </div> -->
+
+        <!-- Items List -->
+        <div class="order-items">
+          <h4>Items ({{ selectedOrder.items.length }})</h4>
+          <app-generic-table
+            [columns]="orderItemsColumns"
+            [data]="orderItemsTableData"
+            [showActions]="false"
+          />
+        </div>
+
+        <!-- Combined Summary Card -->
+        <div class="combined-summary-card">
+          <!-- Order Summary -->
+          <div class="order-summary">
+            <h4><i class="pi pi-dollar"></i> Order Summary</h4>
+            <div class="summary-row">
+              <span>Subtotal:</span>
+              <span>₹{{ selectedOrder.subtotal | number:'1.2-2' }}</span>
+            </div>
+            @if (selectedOrder.productDiscount > 0) {
+              <div class="summary-row discount">
+                <span>Product Discount:</span>
+                <span>-₹{{ selectedOrder.productDiscount | number:'1.2-2' }}</span>
+              </div>
+            }
+            @if (selectedOrder.cartLevelDiscount > 0) {
+              <div class="summary-row discount">
+                <span>Extra Savings:</span>
+                <span>-₹{{ selectedOrder.cartLevelDiscount | number:'1.2-2' }}</span>
+              </div>
+            }
+            <div class="summary-row total">
+              <span>Total:</span>
+              <span>₹{{ selectedOrder.total | number:'1.2-2' }}</span>
+            </div>
+          </div>
+
+          <!-- Delivery Details -->
+          <div class="delivery-details">
+            <h4><i class="pi pi-truck"></i> Delivery Details</h4>
+            <p><strong>Name:</strong> {{ selectedOrder.userDetails.name }}</p>
+            <p><strong>Mobile:</strong> {{ selectedOrder.userDetails.mobile }}</p>
+            <p><strong>Address:</strong> {{ selectedOrder.userDetails.address }}</p>
+            <p><strong>Payment:</strong> {{ selectedOrder.userDetails.paymentMode | uppercase }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}

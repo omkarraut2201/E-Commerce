@@ -1,0 +1,118 @@
+<header class="header">
+  <div class="header-container">
+
+    <!-- Left Section: Menu + Logo -->
+    <div class="header-left">
+      <button class="menu-toggle" (click)="toggleSidebar()" aria-label="Toggle menu">
+        <i class="pi pi-bars"></i>
+      </button>
+
+      <div class="logo">
+        <span class="logo-text">ShopHub</span>
+      </div>
+    </div>
+
+    <!-- Center Section: Search Bar -->
+    <div class="header-center">
+      <div class="search-bar">
+        <i class="pi pi-search search-icon"></i>
+        <input type="text" class="search-input" placeholder="Search products..." aria-label="Search products"
+          [(ngModel)]="searchQuery" (input)="onSearchInput($event)" (focus)="showSearchResults = true" />
+        @if (searchQuery) {
+        <button class="clear-search" (click)="clearSearch()" aria-label="Clear search">
+          <i class="pi pi-times"></i>
+        </button>
+        }
+
+        <!-- Search Results Dropdown -->
+        @if(showSearchResults && searchQuery){
+        <div class="search-results-dropdown">
+          @if(isSearching) {
+          <div class="search-loading">
+            <i class="pi pi-spinner pi-spin"></i>
+            <span>Searching...</span>
+          </div>
+          } @else if (searchResults.length > 0) {
+          <div class="search-results-list">
+            @for(product of searchResults; track product.id) {
+            <a class="search-result-item" [routerLink]="['/products', product.id]" (click)="closeSearch()">
+              <img [src]="product.image" [alt]="product.name" class="result-image" />
+              <div class="result-info">
+                <span class="result-name">{{ product.name }}</span>
+                <div class="result-price">
+                  @if (product.discount) {
+                  <span class="result-discounted">{{ getDiscountedPrice(product) | currency:'INR':'symbol':'1.0-0'
+                    }}</span>
+                  <span class="result-original">{{ product.price | currency:'INR':'symbol':'1.0-0' }}</span>
+                  } @else {
+                  <span class="result-discounted">{{ product.price | currency:'INR':'symbol':'1.0-0' }}</span>
+                  }
+                </div>
+              </div>
+              <span class="result-category">{{ product.category }}</span>
+            </a>
+            }
+          </div>
+          }
+          @else {
+          <div class="search-no-results">
+            <i class="pi pi-search"></i>
+            <span>No products found for "{{ searchQuery }}"</span>
+          </div>
+          }
+        </div>
+        }
+      </div>
+    </div>
+
+    <!-- Right Section: Icons -->
+    <div class="header-right">
+      <!-- Cart Icon with Badge -->
+      <button class="icon-button cart-button" routerLink="/cart" aria-label="Shopping cart">
+        <i class="pi pi-shopping-cart"></i>
+        <span class="badge">{{ cartCount$ | async }}</span>
+      </button>
+
+      <!-- User Profile Dropdown -->
+      <div class="user-menu-wrapper">
+        <button class="profile-button" aria-label="User profile" (click)="toggleMenu($event)">
+          <img src="https://i.pravatar.cc/40?img=1" alt="User avatar" class="profile-avatar" />
+        </button>
+
+        <!-- Dropdown Menu -->
+        @if (isMenuOpen) {
+        <div class="user-dropdown">
+          <!-- User Info Header -->
+          <div class="user-dropdown-header">
+            <div class="user-avatar-large">
+              <img src="https://i.pravatar.cc/60?img=1" alt="John Doe" class="dropdown-avatar" />
+            </div>
+            @if (currentUser$ | async; as user) {
+            <div class="user-info">
+              <p class="user-name">{{ user.name }}</p>
+              <p class="user-email">{{ user.email }}</p>
+            </div>
+            }
+          </div>
+
+          <!-- Divider -->
+          <div class="dropdown-divider"></div>
+
+          <!-- Menu Items -->
+          <div class="dropdown-menu">
+            <button class="dropdown-item" routerLink="/profile" (click)="toggleMenu($event)">
+              <i class="pi pi-user"></i>
+              <span>My Profile</span>
+            </button>
+
+            <button class="dropdown-item logout-item" (click)="logOut()">
+              <i class="pi pi-sign-out"></i>
+              <span>Logout</span>
+            </button>
+          </div>
+        </div>
+        }
+      </div>
+    </div>
+  </div>
+</header>

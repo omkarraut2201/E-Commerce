@@ -1,0 +1,40 @@
+<div class="product-card">
+  <div class="product-image-wrapper" [routerLink]="['/products', product?.id]" style="cursor: pointer;">
+    <img 
+      [src]="product?.image" 
+      [alt]="product?.name" 
+      class="product-image"
+    />
+    @if (product?.discount) {
+      <div class="discount-badge">-{{ product.discount }}%</div>
+    }
+    <!-- @if (product?.stock === 0) {
+      <div class="out-of-stock-badge">Out of Stock</div>
+    } -->
+  </div>
+  
+  <div class="product-info">
+    <h3 class="product-name">{{ product?.name }}</h3>
+    
+    @if (product?.stock !== undefined) {
+      <div class="stock-status" [class.in-stock]="product.stock > 0" [class.out-of-stock]="product.stock === 0">
+        {{ product.stock > 0 ? 'In Stock' : 'Out of Stock' }}
+      </div>
+    }
+    
+    <div class="product-footer">
+      <div class="price-section">
+        @if (product?.discount && getDiscountedPrice()) {
+          <div class="product-price">{{ getDiscountedPrice() | currency:'INR':'symbol':'1.0-0' }}</div>
+          <div class="original-price">{{ product?.price | currency:'INR':'symbol':'1.0-0' }}</div>
+        } @else {
+          <div class="product-price">{{ product?.price | currency:'INR':'symbol':'1.0-0' }}</div>
+        }
+      </div>
+      <button class="add-to-cart-btn" (click)="addToCart()" [disabled]="product?.stock === 0">
+        <i class="pi pi-shopping-cart"></i>
+        {{ product.stock === 0 ? 'Out of Stock' : 'Add to Cart' }}
+      </button>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,134 @@
+<!-- filepath: /home/omkar-raut/ECommerce_project/src/app/features/auth/pages/login/login.html -->
+<div class="login-wrapper">
+  <!-- Left Side: Login Form -->
+  <div class="login-form-section">
+    <div class="login-container">
+      
+      <!-- Logo/Brand -->
+      <div class="brand-section">
+        <h2 class="brand-logo">🛍️ ShopHub</h2>
+        <!-- <p class="brand-tagline">Welcome back!!!</p> -->
+      </div>
+
+      <!-- Sign In Heading -->
+      <h1 class="signin-title">Log in</h1>
+
+      <!-- Login Form -->
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
+        
+        <!-- Email Field -->
+        <div class="form-group">
+          <label for="email" class="form-label">Email</label>
+          <input 
+            type="email"
+            id="email"
+            formControlName="email"
+            placeholder="test@gmail.com"
+            class="form-input"
+            autocomplete="email"
+          />
+          @if (getEmailError()) {
+            <span class="form-error">{{ getEmailError() }}</span>
+          }
+        </div>
+
+        <!-- Password Field -->
+        <div class="form-group">
+          <label for="password" class="form-label">Password</label>
+          <div class="password-input-wrapper">
+            <input 
+              [type]="showPassword ? 'text' : 'password'"
+              id="password"
+              formControlName="password"
+              placeholder="••••••••••••"
+              class="form-input"
+              autocomplete="current-password"
+            />
+            <button 
+              type="button"
+              class="password-toggle"
+              (click)="togglePasswordVisibility()"
+              [attr.aria-label]="showPassword ? 'Hide password' : 'Show password'"
+            >
+              <i class="pi" [ngClass]="showPassword ? 'pi-eye-slash' : 'pi-eye'"></i>
+            </button>
+          </div>
+          @if (getPasswordError()) {
+            <span class="form-error">{{ getPasswordError() }}</span>
+          }
+        </div>
+
+        <!-- Sign In Button -->
+        <button 
+          type="submit"
+          class="signin-button"
+          [disabled]="loginForm.invalid || isLoading()"
+        >
+          @if (isLoading()) {
+            <span class="spinner"></span>
+          }
+          <span>LOG IN</span>
+          <i class="pi pi-arrow-right"></i>
+        </button>
+
+      </form>
+
+      <!-- Test Credentials Info -->
+      <!-- <div class="credentials-info">
+        <p class="credentials-label">Demo Credentials:</p>
+        <div class="credentials-item">
+          <span class="label">Customer:</span>
+          <code>user@example.com</code> / <code>password123</code>
+        </div>
+        <div class="credentials-item">
+          <span class="label">Admin:</span>
+          <code>admin@example.com</code> / <code>admin123</code>
+        </div>
+      </div> -->
+
+    </div>
+  </div>
+
+  <!-- Right Side: Illustration -->
+  <div class="illustration-section">
+    <div class="illustration-container">
+      <!-- Decorative Background Elements -->
+      <!-- <div class="decoration decoration-1"></div>
+      <div class="decoration decoration-2"></div>
+      <div class="decoration decoration-3"></div> -->
+
+      <!-- Main Illustration (using SVG or image) -->
+      <img 
+      src="/assets/illustrations/shoppingperson1.png"
+        alt="Shopping illustration"
+        class="main-illustration"
+        loading="lazy"
+      />
+
+      <!-- Shopping Cart Icon -->
+      <!-- <div class="shopping-cart-illustration"> -->
+        <!-- <svg viewBox="0 0 200 120" class="cart-svg"> -->
+          <!-- Cart outline -->
+          <!-- <g stroke="#1a1a2e" stroke-width="2" fill="none"> -->
+            <!-- Cart body -->
+            <!-- <path d="M 40 60 L 160 60 L 150 100 Q 150 110 140 110 L 60 110 Q 50 110 50 100 Z" /> -->
+            <!-- Cart handle -->
+            <!-- <path d="M 60 60 Q 100 20 140 60" stroke-width="2.5" /> -->
+          <!-- </g> -->
+          
+          <!-- Cart items (colored boxes) -->
+          <!-- <rect x="55" y="70" width="25" height="25" fill="#14b8a6" rx="2" />
+          <rect x="85" y="70" width="25" height="25" fill="#06b6d4" rx="2" />
+          <rect x="115" y="70" width="25" height="25" fill="#f97316" rx="2" /> -->
+        <!-- </svg> -->
+      <!-- </div> -->
+
+      <!-- Floating shapes -->
+      <!-- <div class="floating-circle circle-1"></div>
+      <div class="floating-circle circle-2"></div>
+      <div class="floating-dot dot-1"></div>
+      <div class="floating-dot dot-2"></div> -->
+    </div>
+  </div>
+</div>
+

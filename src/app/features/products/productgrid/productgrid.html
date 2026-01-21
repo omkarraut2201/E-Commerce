@@ -1,0 +1,92 @@
+<section class="product-grid-container">
+    <!-- Overlay -->
+    @if (isSidebarOpen()) {
+      <div class="sidebar-overlay" (click)="closeSidebar()"></div>
+    }
+
+    <!-- Sidebar placed outside the product-grid-layout as requested -->
+    <div class="product-grid-layout-wrapper">
+        <aside class="product-sidebar" [class.open]="isSidebarOpen()">
+            <div class="sidebar-inner">
+                <div class="sidebar-header">
+                    <h2 class="section-title">Categories</h2>
+                    <!-- <button class="close-btn" (click)="closeSidebar()" aria-label="Close sidebar">
+                        <i class="pi pi-times"></i>
+                    </button> -->
+                </div>
+
+                <ul class="category-list">
+                    <li class="category-item" 
+                        [class.active]="selectedCategory === 'All'"
+                        (click)="filterByCategory('All')">
+                        <i class="pi pi-th-large"></i>
+                        <span>All Products</span>
+                    </li>
+                    <li class="category-item" 
+                        [class.active]="selectedCategory === 'Electronics'"
+                        (click)="filterByCategory('Electronics')">
+                        <i class="pi pi-mobile"></i>
+                        <span>Electronics</span>
+                    </li>
+                    <li class="category-item" 
+                        [class.active]="selectedCategory === 'Books'"
+                        (click)="filterByCategory('Books')">
+                        <i class="pi pi-book"></i>
+                        <span>Books</span>
+                    </li>
+                    <li class="category-item" 
+                        [class.active]="selectedCategory === 'Clothing'"
+                        (click)="filterByCategory('Clothing')">
+                        <i class="pi pi-shopping-bag"></i>
+                        <span>Clothing</span>
+                    </li>
+                    <li class="category-item" 
+                        [class.active]="selectedCategory === 'Home'"
+                        (click)="filterByCategory('Home')">
+                        <i class="pi pi-home"></i>
+                        <span>Home & Living</span>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <div class="product-grid-layout">
+            <!-- Main grid -->
+            <main class="product-main" [class.sidebar-open]="isSidebarOpen()">
+                <!-- Loading State -->
+                @if (isLoading) {
+                  <div class="loading-state">
+                    <i class="pi pi-spinner pi-spin" style="font-size: 2rem;"></i>
+                    <p>Loading products...</p>
+                  </div>
+                }
+
+                <!-- Error State -->
+                @if (error && !isLoading) {
+                  <div class="error-state">
+                    <i class="pi pi-exclamation-triangle" style="font-size: 2rem; color: #dc2626;"></i>
+                    <p>{{ error }}</p>
+                    <button (click)="loadProducts()" class="retry-btn">Retry</button>
+                  </div>
+                }
+
+                <!-- Products Grid -->
+                @if (!isLoading && !error) {
+                  <div class="product-grid">
+                    @for (product of products; track product.id) {
+                      <app-product-card [product]="product"></app-product-card>
+                    }
+                  </div>
+                }
+
+                <!-- Empty State -->
+                @if (!isLoading && !error && products.length === 0) {
+                  <div class="empty-state">
+                    <i class="pi pi-inbox" style="font-size: 2rem; color: #9ca3af;"></i>
+                    <p>No products found</p>
+                  </div>
+                }
+            </main>
+        </div>
+    </div>
+</section>

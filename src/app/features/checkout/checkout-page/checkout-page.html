@@ -1,0 +1,110 @@
+<div class="checkout-container">
+    <div class="checkout-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <button class="back-btn" routerLink="/products">
+                <i class="pi pi-arrow-left"></i>
+                Continue Shopping
+            </button>
+            <h1>Checkout</h1>
+            <p>Complete your order</p>
+        </div>
+
+        <div class="checkout-layout">
+            <!-- Left Side: Checkout Form -->
+            <div class="checkout-form-section">
+                <div class="form-card">
+                    <h2>Delivery Details</h2>
+
+                    <form [formGroup]="checkoutForm" (ngSubmit)="onSubmit()">
+                        <!-- Name Field -->
+                        <div class="form-group">
+                            <label for="name">Full Name *</label>
+                            <input id="name" type="text" formControlName="name" placeholder="Enter your full name"
+                                [class.error]="isFieldInvalid('name')" />
+                            @if (isFieldInvalid('name')) {
+                            <span class="error-message">{{ getFieldError('name') }}</span>
+                            }
+                        </div>
+
+                        <!-- Mobile Field -->
+                        <div class="form-group">
+                            <label for="mobile">Mobile Number *</label>
+                            <input id="mobile" type="tel" formControlName="mobile" placeholder="10-digit mobile number"
+                                maxlength="10" [class.error]="isFieldInvalid('mobile')" />
+                            @if (isFieldInvalid('mobile')) {
+                            <span class="error-message">{{ getFieldError('mobile') }}</span>
+                            }
+                        </div>
+
+                        <!-- Address Field -->
+                        <div class="form-group">
+                            <label for="address">Delivery Address *</label>
+                            <textarea id="address" formControlName="address" placeholder="Enter your complete address"
+                                rows="4" [class.error]="isFieldInvalid('address')"></textarea>
+                            @if (isFieldInvalid('address')) {
+                            <span class="error-message">{{ getFieldError('address') }}</span>
+                            }
+                        </div>
+
+                        <!-- Payment Mode -->
+                        <div class="form-group">
+                            <label>Payment Mode *</label>
+                            <div class="payment-options">
+                                <label class="radio-option">
+                                    <input type="radio" formControlName="paymentMode" value="cod" />
+                                    <span class="radio-label">
+                                        <i class="pi pi-money-bill"></i>
+                                        Cash on Delivery
+                                    </span>
+                                </label>
+
+                                <label class="radio-option">
+                                    <input type="radio" formControlName="paymentMode" value="card" />
+                                    <span class="radio-label">
+                                        <i class="pi pi-credit-card"></i>
+                                        Credit/Debit Card
+                                    </span>
+                                </label>
+
+                                <label class="radio-option">
+                                    <input type="radio" formControlName="paymentMode" value="upi" />
+                                    <span class="radio-label">
+                                        <i class="pi pi-wallet"></i>
+                                        UPI
+                                    </span>
+                                </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Right Side: Order Summary -->
+            <div class="order-summary-section">
+                <app-order-summary [data]="orderSummaryData" />
+
+                <!-- Place Order Button -->
+                <button class="place-order-btn" (click)="onSubmit()"
+                    [disabled]="checkoutForm.invalid || isSubmitting || cartItems.length === 0"
+                    [class.disabled]="checkoutForm.invalid">
+                    <!-- @if (isSubmitting) {
+                    <i class="pi pi-spin pi-spinner"></i>
+                    Processing...
+                    } @else { -->
+                    <i class="pi pi-check-circle"></i>
+                    Place Order
+                    <!-- } -->
+                </button>
+
+                <!-- Form Validation Message -->
+                @if (checkoutForm.invalid && !isSubmitting) {
+                <div class="validation-hint">
+                    <i class="pi pi-info-circle"></i>
+                    <span>Please fill all required fields to continue</span>
+                </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,185 @@
+<div class="table-container">
+  @if (data.length > 0) {
+  <!-- Desktop/Tablet Table View -->
+  <table class="generic-table desktop-table">
+    <!-- Table Header -->
+    <thead>
+      <tr>
+        @for (column of columns; track column.key) {
+        <th [style.width]="column.width">{{ column.label }}</th>
+        }
+        @if (showActions) {
+        <th class="actions-column">Actions</th>
+        }
+      </tr>
+    </thead>
+
+    <!-- Table Body -->
+    <tbody>
+      @for (row of data; track row.id) {
+      <tr>
+        @for (column of columns; track column.key) {
+        <td>
+          @switch (column.type) {
+          @case ('image') {
+          <img [src]="row[column.key]" [alt]="row.name" class="table-image" />
+          }
+          @case ('currency') {
+          <span class="currency-value">
+            {{ row[column.key] | currency:'INR':'symbol':'1.0-0' }}
+          </span>
+          }
+          @case ('price-with-discount') {
+          <div class="price-container">
+            @if (row['discount'] && row['discount'] > 0) {
+            <div class="discounted-price">
+              {{ (row[column.key] * (1 - row['discount'] / 100)) | currency:'INR':'symbol':'1.0-0' }}
+              <span class="discount-badge">{{ row['discount'] }}% OFF</span>
+            </div>
+            <div class="original-price-strike">
+              {{ row[column.key] | currency:'INR':'symbol':'1.0-0' }}
+            </div>
+            } @else {
+            <div class="regular-price">
+              {{ row[column.key] | currency:'INR':'symbol':'1.0-0' }}
+            </div>
+            }
+          </div>
+          }
+          @case ('quantity') {
+          <div class="quantity-controls">
+            <button class="qty-btn" (click)="decreaseQuantity(row)" [disabled]="row[column.key] <= 1">
+              <i class="pi pi-minus"></i>
+            </button>
+            <span class="qty-value">{{ row[column.key] }}</span>
+            <button class="qty-btn" (click)="increaseQuantity(row)">
+              <i class="pi pi-plus"></i>
+            </button>
+          </div>
+          }
+          @case ('date') {
+          <span class="date-value">
+            {{ row[column.key] | date:'dd MMM yyyy' }}
+          </span>
+          }
+
+          @case ('badge') {
+          <span class="status-badge" [ngClass]="row[column.key]">
+            {{ row[column.key] }}
+          </span>
+          }
+
+          @case ('action-button') {
+          <button class="action-btn" (click)="handleActionClick(row)">
+            <i class="pi pi-eye"></i>
+            {{ column.label || 'View Details' }}
+          </button>
+          }
+          @default {
+          <span>{{ row[column.key] }}</span>
+          }
+          }
+        </td>
+        }
+        @if (showActions) {
+        <td class="actions-cell">
+          <button class="delete-btn" (click)="deleteItem(row)">
+            <i class="pi pi-trash"></i>
+            Remove
+          </button>
+        </td>
+        }
+      </tr>
+      }
+    </tbody>
+  </table>
+
+  <!-- Mobile Card View -->
+  <div class="mobile-cards">
+    @for (row of data; track row.id) {
+    <div class="mobile-card">
+      @for (column of columns; track column.key) {
+      <div class="mobile-card-row">
+        <span class="mobile-label">{{ column.label }}:</span>
+        <div class="mobile-value">
+          @switch (column.type) {
+          @case ('image') {
+          <img [src]="row[column.key]" [alt]="row.name" class="table-image" />
+          }
+          @case ('currency') {
+          <span class="currency-value">
+            {{ row[column.key] | currency:'INR':'symbol':'1.0-0' }}
+          </span>
+          }
+          @case ('price-with-discount') {
+          <div class="price-container">
+            @if (row['discount'] && row['discount'] > 0) {
+            <div class="discounted-price">
+              {{ (row[column.key] * (1 - row['discount'] / 100)) | currency:'INR':'symbol':'1.0-0' }}
+              <span class="discount-badge">{{ row['discount'] }}% OFF</span>
+            </div>
+            <div class="original-price-strike">
+              {{ row[column.key] | currency:'INR':'symbol':'1.0-0' }}
+            </div>
+            } @else {
+            <div class="regular-price">
+              {{ row[column.key] | currency:'INR':'symbol':'1.0-0' }}
+            </div>
+            }
+          </div>
+          }
+          @case ('quantity') {
+          <div class="quantity-controls">
+            <button class="qty-btn" (click)="decreaseQuantity(row)" [disabled]="row[column.key] <= 1">
+              <i class="pi pi-minus"></i>
+            </button>
+            <span class="qty-value">{{ row[column.key] }}</span>
+            <button class="qty-btn" (click)="increaseQuantity(row)">
+              <i class="pi pi-plus"></i>
+            </button>
+          </div>
+          }
+          @case ('date') {
+          <span class="date-value">
+            {{ row[column.key] | date:'dd MMM yyyy' }}
+          </span>
+          }
+
+          @case ('badge') {
+          <span class="status-badge" [ngClass]="row[column.key]">
+            {{ row[column.key] }}
+          </span>
+          }
+
+          @case ('action-button') {
+          <button class="action-btn" (click)="handleActionClick(row)">
+            <i class="pi pi-eye"></i>
+            {{ column.label || 'View Details' }}
+          </button>
+          }
+          @default {
+          <span>{{ row[column.key] }}</span>
+          }
+          }
+        </div>
+      </div>
+      }
+      @if (showActions) {
+      <div class="mobile-card-actions">
+        <button class="delete-btn" (click)="deleteItem(row)">
+          <i class="pi pi-trash"></i>
+          Remove
+        </button>
+      </div>
+      }
+    </div>
+    }
+  </div>
+  } @else {
+  <!-- Empty State -->
+  <div class="empty-state">
+    <i class="pi pi-shopping-cart"></i>
+    <p>No items to display</p>
+  </div>
+  }
+</div>

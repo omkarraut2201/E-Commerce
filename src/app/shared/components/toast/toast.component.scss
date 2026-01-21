@@ -1,0 +1,131 @@
+::ng-deep {
+  .p-toast {
+    z-index: 9999;
+    opacity: 1;
+  }
+
+  .p-toast-message {
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    border-left: 5px solid;
+    backdrop-filter: blur(10px);
+    margin: 0 0 1rem 0;
+    animation: slideIn 0.3s ease-out;
+
+    &.p-toast-message-success {
+      background: linear-gradient(135deg, #d4edda 0%, #c3e6cb 100%);
+      border-left-color: #28a745;
+      color: #155724;
+
+      .p-toast-message-icon,
+      .pi-check {
+        color: #28a745;
+      }
+    }
+
+    &.p-toast-message-error {
+      background: linear-gradient(135deg, #ffe5e5 0%, #fecaca 100%);
+      border-left-color: #dc2626;
+      color: #991b1b;
+
+      .p-toast-message-icon,
+      .pi-times {
+        color: #dc2626;
+      }
+    }
+
+    &.p-toast-message-warn {
+      background: linear-gradient(135deg, #fff3cd 0%, #ffd93d 100%);
+      border-left-color: #f97316;
+      color: #92400e;
+
+      .p-toast-message-icon,
+      .pi-exclamation-triangle {
+        color: #f97316;
+      }
+    }
+
+    &.p-toast-message-info {
+      background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+      border-left-color: #3b82f6;
+      color: #1e40af;
+
+      .p-toast-message-icon,
+      .pi-info-circle {
+        color: #3b82f6;
+      }
+    }
+  }
+
+  .p-toast-message-content {
+    padding: 0.875rem 1.125rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .p-toast-message-icon {
+    font-size: 1.375rem;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    line-height: 1;
+    margin-top: -2px;
+  }
+
+  .p-toast-message-text {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.0625rem;
+    line-height: 1;
+  }
+
+  .p-toast-summary {
+    font-weight: 600;
+    font-size: 0.9375rem;
+    margin: 0;
+    line-height: 1.3;
+    display: flex;
+    align-items: center;
+  }
+
+  .p-toast-detail {
+    font-size: 0.875rem;
+    line-height: 1.3;
+    opacity: 0.85;
+    margin: 0;
+    display: flex;
+    align-items: center;
+  }
+
+  .p-toast-icon-close {
+    background: transparent;
+    color: inherit;
+    opacity: 0.6;
+    transition: all 0.2s;
+    width: 2rem;
+    height: 2rem;
+    border-radius: 50%;
+
+    &:hover {
+      opacity: 1;
+      background: rgba(0, 0, 0, 0.1);
+    }
+  }
+
+  @keyframes slideIn {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+}

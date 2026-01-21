@@ -1,0 +1,86 @@
+<div class="order-summary-card">
+  <h2 class="summary-title">Order Summary</h2>
+  
+  <!-- Discount Progress Bar -->
+  <div class="discount-progress-section">
+    <div class="progress-header">
+      <span class="progress-icon">🎁</span>
+      <span class="progress-message">{{ data.discountMessage }}</span>
+    </div>
+    
+    <div class="progress-bar-container">
+      <div class="progress-bar" [style.width.%]="data.progressPercentage"></div>
+    </div>
+    
+    <div class="progress-milestones">
+      @if (data.currentTier === 'tier2') {
+        <!-- 20% OFF Milestone -->
+        <div class="milestone active">
+          <span class="milestone-label">20% OFF</span>
+          <span class="milestone-amount">₹20K</span>
+        </div>
+      } @else if (data.currentTier === 'tier1') {
+        <!-- 10% OFF Milestone -->
+        <div class="milestone active">
+          <span class="milestone-label">10% OFF</span>
+          <span class="milestone-amount">₹5K</span>
+        </div>
+      } @else {
+        <!-- Show both milestones when none achieved -->
+        <div class="milestone">
+          <span class="milestone-label">10% OFF</span>
+          <span class="milestone-amount">₹5K</span>
+        </div>
+        <div class="milestone">
+          <span class="milestone-label">20% OFF</span>
+          <span class="milestone-amount">₹20K</span>
+        </div>
+      }
+    </div>
+  </div>
+  
+  <!-- Price Breakdown -->
+  <div class="summary-row">
+    <span class="summary-label">
+      Price ({{ data.itemCount }} {{ data.itemCount === 1 ? 'item' : 'items' }})
+    </span>
+    <span class="summary-value">{{ data.subtotal | currency:'INR':'symbol':'1.2-2' }}</span>
+  </div>
+
+  @if (data.productDiscount > 0) {
+    <div class="summary-row discount-row">
+      <span class="summary-label">Product Discount</span>
+      <span class="summary-value discount-value">-{{ data.productDiscount | currency:'INR':'symbol':'1.2-2' }}</span>
+    </div>
+  }
+
+  @if (data.cartLevelDiscount > 0) {
+    <div class="summary-row discount-row">
+      <span class="summary-label">
+        Extra Savings
+        @if (data.currentTier === 'tier2') {
+          <span class="tier-badge">20% OFF</span>
+        } @else if (data.currentTier === 'tier1') {
+          <span class="tier-badge">10% OFF</span>
+        }
+      </span>
+      <span class="summary-value discount-value">-{{ data.cartLevelDiscount | currency:'INR':'symbol':'1.2-2' }}</span>
+    </div>
+  }
+  
+  <div class="summary-divider"></div>
+
+  <!-- Total -->
+  <div class="summary-row total-row">
+    <span class="summary-label">Total:</span>
+    <span class="summary-value total-value">{{ data.total | currency:'INR':'symbol':'1.2-2' }}</span>
+  </div>
+
+  <!-- Checkout Button (conditional) -->
+  @if (data.showCheckoutButton !== false) {
+    <button class="checkout-btn" (click)="handleCheckout()">
+      <i class="pi pi-shopping-cart"></i>
+      Proceed to Checkout
+    </button>
+  }
+</div>
